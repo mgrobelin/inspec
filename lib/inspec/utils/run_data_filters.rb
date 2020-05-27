@@ -13,6 +13,7 @@ module Inspec
       def apply_run_data_filters_to_hash
         @config[:runtime_config] = Inspec::Config.cached || {}
         apply_report_resize_options
+        redact_sensitive_inputs
       end
 
       # Apply options such as message truncation and removal of backtraces
@@ -35,6 +36,18 @@ module Inspec
           end
         end
       end
+
+      # Find any inputs with :sensitive = true and replace their values with "***"
+      def redact_sensitive_inputs
+        @run_data[:profiles]&.each do |p|
+          p[:inputs]&.each do |i|
+            next unless i[:options][:sensitive]
+
+            i[:options][:value] = "***"
+          end
+        end
+      end
+
     end
   end
 end
