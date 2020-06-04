@@ -345,7 +345,6 @@ module Inspec
         json
         json-automate
         json-min
-        junit
         yaml
       }
 
